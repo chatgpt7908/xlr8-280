@@ -24,9 +24,17 @@ else
     echo "❌ Incorrect image: $cron_image"
 fi
 
+# Normalize whitespace function
+normalize_whitespace() {
+    echo "$1" | xargs
+}
+
 # Validate schedule
 cron_schedule=$(oc get cronjob "$CRONJOB_NAME" -n "$PROJECT" -o jsonpath='{.spec.schedule}')
-if [ "$cron_schedule" == "$SCHEDULE" ]; then
+normalized_cron_schedule=$(normalize_whitespace "$cron_schedule")
+normalized_expected_schedule=$(normalize_whitespace "$SCHEDULE")
+
+if [ "$normalized_cron_schedule" == "$normalized_expected_schedule" ]; then
     echo "✅ Schedule is correct: $cron_schedule"
 else
     echo "❌ Incorrect schedule: $cron_schedule"

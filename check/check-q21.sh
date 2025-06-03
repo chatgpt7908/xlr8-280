@@ -21,32 +21,37 @@ if [[ -z "$limitrange_name" || -z "$resourcequota_name" ]]; then
   echo "❌ LimitRange or ResourceQuota missing in template"
   exit 1
 fi
-echo "✅ Found LimitRange: $limitrange_name"
-echo "✅ Found ResourceQuota: $resourcequota_name"
 
-# Step 3: Create a test project to verify objects are applied
+# Step 3: Create a test project
 test_project="projtest-$(date +%s)"
 echo "Creating test project: $test_project"
 oc new-project "$test_project" >/dev/null 2>&1
 
-# Wait for some seconds to allow template objects to apply
+# Substitute ${PROJECT_NAME} with the actual test project name
+limitrange_name_resolved=$(echo "$limitrange_name" | sed "s/\${PROJECT_NAME}/$test_project/")
+resourcequota_name_resolved=$(echo "$resourcequota_name" | sed "s/\${PROJECT_NAME}/$test_project/")
+
+echo "✅ Resolved LimitRange: $limitrange_name_resolved"
+echo "✅ Resolved ResourceQuota: $resourcequota_name_resolved"
+
+# Wait for resources to be created
 echo "Waiting 10 seconds for objects to be created in $test_project..."
 sleep 10
 
-# Step 4: Validate LimitRange exists in the test project
+# Step 4: Validate LimitRange
 echo "Checking LimitRange in $test_project..."
-if oc get limitrange "$limitrange_name" -n "$test_project" >/dev/null 2>&1; then
-  echo "✅ LimitRange $limitrange_name found"
+if oc get limitrange "$limitrange_name_resolved" -n "$test_project" >/dev/null 2>&1; then
+  echo "✅ LimitRange $limitrange_name_resolved found"
 else
-  echo "❌ LimitRange $limitrange_name NOT found"
+  echo "❌ LimitRange $limitrange_name_resolved NOT found"
 fi
 
-# Step 5: Validate ResourceQuota exists in the test project
+# Step 5: Validate ResourceQuota
 echo "Checking ResourceQuota in $test_project..."
-if oc get resourcequota "$resourcequota_name" -n "$test_project" >/dev/null 2>&1; then
-  echo "✅ ResourceQuota $resourcequota_name found"
+if oc get resourcequota "$resourcequota_name_resolved" -n "$test_project" >/dev/null 2>&1; then
+  echo "✅ ResourceQuota $resourcequota_name_resolved found"
 else
-  echo "❌ ResourceQuota $resourcequota_name NOT found"
+  echo "❌ ResourceQuota $resourcequota_name_resolved NOT found"
 fi
 
 # Step 6: Cleanup test project
