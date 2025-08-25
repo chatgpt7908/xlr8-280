@@ -4,7 +4,7 @@
 oc new-project atlas
 
 oc run mercury \
-  --image=quay.io/redhattraining/hello-world-nginx \
+  --image=quay.io/redhattraining/hello-world-nginx:v1.0 \
   --restart=Always \
   --labels="app=mercury" \
   --port=8080 \
@@ -16,7 +16,7 @@ oc expose pod mercury --port=8080 -n atlas
 oc new-project bluewills
 
 oc run rocky \
-  --image=quay.io/redhattraining/hello-world-nginx \
+  --image=quay.io/redhattraining/hello-world-nginx:v1.0 \
   --restart=Always \
   --labels="app=rocky" \
   --port=8080 \
