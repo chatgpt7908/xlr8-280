@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: quay.io/redhattraining/hello-world-nginx
+          image: quay.io/redhattraining/hello-world-nginx:v1.0
           ports:
             - containerPort: 8080
           command:
