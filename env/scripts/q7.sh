@@ -5,7 +5,7 @@ oc adm taint node master01 dbz=goku:NoSchedule --overwrite
 oc new-project bluewills || oc project bluewills
 
 # 3. Create deployment (no toleration → pod will go Pending)
-oc create deployment rocky --image=quay.io/redhattraining/hello-world-nginx
+oc create deployment rocky --image=quay.io/redhattraining/hello-world-nginx:v1.0
 
 # 4. Expose deployment as a service
 oc expose deployment rocky --port=8080
