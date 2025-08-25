@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: voyager
-        image: quay.io/redhattraining/hello-world-nginx
+        image: quay.io/redhattraining/hello-world-nginx:v1.0
         ports:
         - containerPort: 80
       nodeSelector:
